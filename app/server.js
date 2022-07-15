@@ -3,7 +3,10 @@ class Application {
   #app = this.#express();
   constructor(port, dbUrl) {
     this.connectToDb(dbUrl);
+    this.configApp();
     this.connectToServer(port);
+    this.configRoute();
+    this.errorHandler();
   }
   connectToServer(port) {
     if (!typeof port === "number" && isNaN(port)) return;
@@ -47,4 +50,16 @@ class Application {
       });
     });
   }
+  configRoute() {
+    const allRoute = require("./routers/router");
+    this.#app.get("/", (req, res, next) => {
+      return res.json({
+        status: 200,
+        message: "Welcome this is Api for project manager Version 0.1.0 (beta)",
+      });
+    });
+    this.#app.use(allRoute);
+  }
 }
+
+module.exports = Application;

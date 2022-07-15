@@ -1,9 +1,9 @@
 // --Start
 
-//+
-//# نکته ها...
+//+ When Export Class ...
+//# When export a class the best way is new that in the export declaration
 
-//--Pause 94 26:44
+//--End 96
 
 /****↓Helper↓****
 
