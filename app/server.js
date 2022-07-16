@@ -58,6 +58,13 @@ class Application {
         message: "Welcome this is Api for project manager Version 0.1.0 (beta)",
       });
     });
+    this.#app.use((err, req, res, next) => {
+      try {
+        this.#app.use(allRoute);
+      } catch (error) {
+        next(error);
+      }
+    });
     this.#app.use(allRoute);
   }
 }
