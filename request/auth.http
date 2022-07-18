@@ -1,0 +1,10 @@
+### Register Request
+post http://localhost:8000/auth/register 
+
+{
+  "username":"asfdgg",
+  "email":"",
+  "mobile":"",
+  "password":"",
+  "confirm_password":""
+}
