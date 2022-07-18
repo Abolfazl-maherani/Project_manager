@@ -1,5 +1,3 @@
-// TODO: Create middleware for formatting output error in express validator
-
 const { body } = require("express-validator");
 const registerValidator = () => [
   body("username")
