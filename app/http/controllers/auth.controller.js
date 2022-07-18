@@ -4,7 +4,6 @@ class AuthController {
     const { email, password, confirmPassword, mobile } = req.body;
     const result = validationResult(req);
     res.json({
-      mamad: "sdljf",
       result,
     });
   }

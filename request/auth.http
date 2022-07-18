@@ -1,10 +1,11 @@
 ### Register Request
 post http://localhost:8000/auth/register 
+Content-Type: application/json; charset=utf-8
 
 {
-  "username":"asfdgg",
-  "email":"",
-  "mobile":"",
-  "password":"",
-  "confirm_password":""
+  "username":"agh.abolfazl",
+  "email":"a.mahrani@81mail.com", 
+  "mobile":"09032271936",
+  "password":"124567",
+  "confirm_password":"124567"
 }

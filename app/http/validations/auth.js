@@ -7,12 +7,9 @@ const registerValidator = () => [
     .withMessage("نام کاربری نباید خالی باشد")
     .isLength({ min: 4, max: 25 })
     .withMessage("نام کاربری باید بین 4 تا 25 کاراکتر باشد")
-    .custom((input, meta) => {
-      if (usernameRegix.test(input)) return true;
-      throw {
-        message: "نام کاربری صحیح نمیباشد",
-      };
-    }),
+    .matches(/^[a-zA-Z][a-zA-Z1-9\.\_]*$/)
+    .withMessage("نام کاربری باید با حروف لاتین شروع شود"),
+
   body("email")
     .notEmpty()
     .withMessage("ایمیل نباید خالی باشد")
@@ -26,8 +23,8 @@ const registerValidator = () => [
     .withMessage("رمز عبور حداقل 6 و حداکثر 16 کاراکتر باید باشد. ")
     .custom((value, ctx) => {
       if (!value) throw { message: "رمز عبور وارد نشده است" };
-      if (value !== ctx.req?.body?.confirm_message)
-        throw { message: "رمز عبور با تکرار آن برابر نیست" };
+      if (value !== ctx.req?.body?.confirm_password)
+        throw "رمز عبور با تکرار آن برابر نیست";
       return true;
     }),
 ];
