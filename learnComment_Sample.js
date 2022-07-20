@@ -37,6 +37,9 @@
 //+ Use variable in http-rest-client
 //# Can use {{}} to use variable in http-rest-client
 
+//+ bail method  in express-validator
+//# Stop error when get first error validation
+body("password").notEmpty().withMessage("رمز عبور وارد نشده است").bail();
 //? Wy save jwt token in db?
 //--End 100
 
