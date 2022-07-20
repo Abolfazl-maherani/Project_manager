@@ -2,14 +2,21 @@
 const { body } = require("express-validator");
 const { userModel } = require("../../models/user");
 
+//Regix match for validation
+const USERNAME_REGEXP = {
+  match: /^[a-zA-Z][a-zA-Z1-9\.\_]*$/,
+  msg: "نام کاربری باید با حروف لاتین شروع شود کاراکتر های مجاز(اعداد، . _)",
+};
+
+//Validation
 const registerValidator = () => [
   body("username")
     .notEmpty()
     .withMessage("نام کاربری نباید خالی باشد")
     .isLength({ min: 4, max: 25 })
     .withMessage("نام کاربری باید بین 4 تا 25 کاراکتر باشد")
-    .matches(/^[a-zA-Z][a-zA-Z1-9\.\_]*$/)
-    .withMessage("نام کاربری باید با حروف لاتین شروع شود")
+    .matches(USERNAME_REGEXP.match)
+    .withMessage(USERNAME_REGEXP.msg)
     .custom(async (input) => {
       const user = await userModel.findOne({ username: input });
       if (user) throw "نام کاربری در سیستم موجود میباشد.";
@@ -44,4 +51,15 @@ const registerValidator = () => [
       return true;
     }),
 ];
-module.exports = registerValidator;
+
+const loginValidator = () => [
+  body("username")
+    .notEmpty()
+    .withMessage("نام کاربری نمیتواند خالی باشد")
+    .matches(USERNAME_REGEXP.match)
+    .withMessage(USERNAME_REGEXP.msg),
+  body("password")
+    .isLength({ max: 16, min: 6 })
+    .withMessage("رمز عبور حداقل 6 و حداکثر 16 کاراکتر باید باشد. "),
+];
+module.exports = { registerValidator, loginValidator };

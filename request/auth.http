@@ -4,8 +4,22 @@ Content-Type: application/json; charset=utf-8
 
 {
   "username":"mamad_reza",
-  "email":"a.maghhdr@gmail.com", 
-  "mobile":"09034022095",
+  "email":"a.44@gmail.com", 
+  "mobile":"09044022095",
+  "password":"124567",
+  "confirm_password":"124567"
+} 
+
+
+### Login Request
+post http://localhost:8000/auth/login 
+Content-Type: application/json; charset=utf-8
+Authorization: Bearer {{$dotenv TOKEN}}
+
+{
+  "username":"mamad_reza",
+  "email":"a.44@2.com", 
+  "mobile":"09044022095",
   "password":"124567",
   "confirm_password":"124567"
 } 

@@ -22,7 +22,24 @@
 
 //+ Check and save in db
 //# We must check every thing and Save that to db
-//--End
+
+//+ What is HAMC ?
+//# Hashed Message Authentication Code Send hash message with a secret key
+//# در رمز گذاری متقارن ما دوتا کلید برای رمزگذاری و بازگشایی داریم
+//# در رمز گذاری نامتقارن
+
+//+ md5 is 32 charecter
+//# md5 can not roll back
+
+//+ Hash
+//# ورودی با طول نامعلوم خروجی با طول معلوم
+
+//+ Use variable in http-rest-client
+//# Can use {{}} to use variable in http-rest-client
+
+//? Wy save jwt token in db?
+//--End 100
+
 /****↓Helper↓****
 
 Start, Pause, End: -- 
