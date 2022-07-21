@@ -11,7 +11,7 @@ const equalStringToHash = (str, hashPassword) => {
 const generateToken = (payload) => {
   try {
     if (!payload) return;
-    if (payload.toString() === "[object Object]") {
+    if (typeof payload === "object") {
       const { username } = payload;
       payload = {
         username,
@@ -25,9 +25,31 @@ const generateToken = (payload) => {
     console.log(error);
   }
 };
+const validateTokne = (
+  token,
+  forLogin = false,
+  secret = process.env.SIGN_JWT
+) => {
+  try {
+    if (!token) return;
+    const matchToken = /(Bearer).{5,}/;
+    if (token.match(matchToken)) {
+      token = token.substr(6).trim();
+      return jwt.verify(token, secret);
+    }
+  } catch (error) {
+    if (!forLogin)
+      throw {
+        message: "مجوز دسترسی ندارید لطفا لاگین کنید.",
+        status: 403,
+        success: false,
+      };
+  }
+};
 
 module.exports = {
   hashString,
   equalStringToHash,
   generateToken,
+  validateTokne,
 };

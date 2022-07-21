@@ -3,6 +3,7 @@ const {
   hashString,
   equalStringToHash,
   generateToken,
+  validateTokne,
 } = require("../../modules/function");
 class AuthController {
   async register(req, res, next) {
@@ -22,6 +23,16 @@ class AuthController {
   }
   async login(req, res, next) {
     try {
+      if ("authorization" in req.headers) {
+        const { authorization: token } = req.headers;
+        if (validateTokne(token, true))
+          throw {
+            message: "شما در سیستم  لاگین هستید و نیاز به لاگین مجدد نیست.",
+            status: 302,
+            success: false,
+          };
+      }
+
       const { username, password } = req.body;
       const user = await userModel.findOne({ username });
       if (!user)
@@ -29,9 +40,8 @@ class AuthController {
       const { password: hashPassword } = user;
       if (!equalStringToHash(password, hashPassword))
         throw { message: "نام کاربری یا رمز عبور اشتباه است", status: 401 };
-      const token = generateToken({ user });
+      const token = generateToken(user);
       if (!token) throw { status: 500, message: "خطای ناشناخته سرور" };
-      console.log(req.headers);
       res.json({
         status: 200,
         success: true,
