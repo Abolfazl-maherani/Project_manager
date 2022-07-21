@@ -1,18 +1,18 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model, Types } = require("mongoose");
 const schemaUser = new Schema(
   {
     first_name: { type: String },
     last_name: { type: String },
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    mobiles: { type: String, require: true, unique: true },
-    roles: { type: String, default: ["USER"] },
+    mobile: { type: String, require: true, unique: true },
+    roles: { type: [String], default: ["USER"] },
     email: { type: String, require: true, unique: true },
-    skills: { type: String, default: [] },
-    team: { type: String, default: [] },
+    skills: { type: [String], default: [] },
+    team: { type: [Types.ObjectId], default: [] },
   },
   {
     timestamps: true,
   }
 );
-model.exports.userModel = model("user", schemaUser);
+module.exports.userModel = model("user", schemaUser);

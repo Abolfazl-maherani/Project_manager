@@ -41,6 +41,7 @@ class Application {
       });
     });
     this.#app.use((err, req, res, next) => {
+      console.log("وارد ارور هندلینگ شد");
       const status = err?.status || 500;
       const message = err?.message || "خطای سرور";
       return res.status(status).json({
@@ -53,10 +54,23 @@ class Application {
   configRoute() {
     const allRoute = require("./routers/router");
     this.#app.get("/", (req, res, next) => {
-      return res.json({
-        status: 200,
-        message: "Welcome this is Api for project manager Version 0.1.0 (beta)",
-      });
+      try {
+        return res.json({
+          status: 200,
+          message:
+            "Welcome this is Api for project manager Version 0.1.0 (beta)",
+        });
+      } catch (error) {
+        next(error);
+      }
+    });
+
+    this.#app.use((err, req, res, next) => {
+      try {
+        this.#app.use(allRoute);
+      } catch (error) {
+        next(error);
+      }
     });
     this.#app.use(allRoute);
   }
