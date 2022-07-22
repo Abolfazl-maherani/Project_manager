@@ -1,5 +1,5 @@
 const { userModel } = require("../../models/user");
-const { checkField } = require("../../modules/function");
+const { checkField, hashString } = require("../../modules/function");
 class UserController {
   async getProfile(req, res, next) {
     try {
@@ -29,6 +29,12 @@ class UserController {
           success: fasle,
         };
       const { username } = req.user;
+
+      if ("password" in req.body) {
+        const { password } = req.body;
+        const hash_password = hashString(password);
+        req.body.password = hash_password;
+      }
 
       //TODO: We should change this method i will update and return data updated
       const { acknowledged, modifiedCount } = await userModel.updateOne(
