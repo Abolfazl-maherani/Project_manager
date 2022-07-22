@@ -46,10 +46,21 @@ const validateTokne = (
       };
   }
 };
-
+const checkField = (inputField, ...accessField) => {
+  if (!accessField && !inputField) return;
+  if (typeof inputField === "object") input = Object.entries(inputField);
+  if (!Array.isArray(inputField)) return;
+  inputField.forEach((elem) => {
+    if (!accessField.includes(elem)) {
+      return false;
+    }
+  });
+  return true;
+};
 module.exports = {
   hashString,
   equalStringToHash,
   generateToken,
   validateTokne,
+  checkField,
 };

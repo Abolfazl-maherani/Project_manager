@@ -40,8 +40,8 @@ class Application {
         message: "صفحه مورد نظر یافت نشد.",
       });
     });
+
     this.#app.use((err, req, res, next) => {
-      console.log("وارد ارور هندلینگ شد");
       const status = err?.status || 500;
       const message = err?.message || "خطای سرور";
       return res.status(status).json({
