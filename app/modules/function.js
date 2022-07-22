@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const _URL = require("url");
 const hashString = (str) => {
   if (!str) return;
   const salt = bcrypt.genSaltSync(10);
@@ -69,7 +70,12 @@ const deleteAddationalField = (input, ...accessField) => {
     return input;
   }
 };
-
+const pathToFileUrl = (path) => {
+  if (!typeof path === "string") return;
+  const { href: url } = _URL.pathToFileURL(path);
+  const statcFolder = "public";
+  return url.substring(url.indexOf(statcFolder) + statcFolder.length);
+};
 module.exports = {
   hashString,
   equalStringToHash,
@@ -77,4 +83,5 @@ module.exports = {
   validateTokne,
   checkField,
   deleteAddationalField,
+  pathToFileUrl,
 };

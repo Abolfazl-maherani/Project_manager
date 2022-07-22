@@ -10,6 +10,7 @@ const schemaUser = new Schema(
     email: { type: String, require: true, unique: true },
     skills: { type: [String], default: [] },
     team: { type: [Types.ObjectId], default: [] },
+    profile_image: { type: String },
   },
   {
     timestamps: true,

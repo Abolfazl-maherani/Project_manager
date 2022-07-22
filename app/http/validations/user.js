@@ -1,4 +1,4 @@
-const { body } = require("express-validator");
+const { body, check } = require("express-validator");
 const { version } = require("mongoose");
 const { userModel } = require("../../models/user");
 
@@ -57,7 +57,7 @@ const userValidator = () => [
       return true;
     }),
   body("last_name")
-    .if((val, { req }) => "last_name in req.body")
+    .if((val, { req }) => "last_name" in req.body)
     .trim()
     .custom(async (input, { req }) => {
       const { username } = req.user;
