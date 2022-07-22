@@ -5,7 +5,7 @@ const router = require("express").Router();
 const userController = require("../http/controllers/user.controller");
 const userValidator = require("../http/validations/user");
 router.get("/profile", checkLogged, userController.getProfile);
-router.patch(
+router.put(
   "/profile",
   checkLogged,
   userValidator(),

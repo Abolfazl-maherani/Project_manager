@@ -1,5 +1,10 @@
 const { userModel } = require("../../models/user");
-const { checkField, hashString } = require("../../modules/function");
+const {
+  checkField,
+  hashString,
+  deleteAddationalField,
+} = require("../../modules/function");
+
 class UserController {
   async getProfile(req, res, next) {
     try {
@@ -22,12 +27,11 @@ class UserController {
         "password",
         "skiils",
       ];
-      if (!checkField(Object.keys(req.body), ...canEdit))
-        throw {
-          message: "فیلدهای ورودی صحیح نمیباشد",
-          status: 400,
-          success: fasle,
-        };
+      const inputKey = Object.keys(req.body);
+
+      if (!checkField(inputKey, ...canEdit))
+        req.body = deleteAddationalField(req.body, ...canEdit);
+
       const { username } = req.user;
 
       if ("password" in req.body) {
@@ -49,7 +53,7 @@ class UserController {
         };
       return res.status(200).json({
         message: "بروزرسانی با موفقیت انجام شد ",
-        status: 204,
+        status: 200,
         success: true,
       });
     } catch (error) {

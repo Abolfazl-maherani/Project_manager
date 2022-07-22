@@ -50,17 +50,31 @@ const checkField = (inputField, ...accessField) => {
   if (!accessField && !inputField) return;
   if (typeof inputField === "object") input = Object.entries(inputField);
   if (!Array.isArray(inputField)) return;
+  let result = true;
   inputField.forEach((elem) => {
     if (!accessField.includes(elem)) {
-      return false;
+      result = false;
     }
   });
-  return true;
+  return result;
 };
+const deleteAddationalField = (input, ...accessField) => {
+  const inputField = Object.keys(input);
+  if (!checkField(inputField, ...accessField)) {
+    inputField.forEach((element) => {
+      if (!accessField.includes(element)) {
+        delete input[element];
+      }
+    });
+    return input;
+  }
+};
+
 module.exports = {
   hashString,
   equalStringToHash,
   generateToken,
   validateTokne,
   checkField,
+  deleteAddationalField,
 };
