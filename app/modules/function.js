@@ -76,6 +76,18 @@ const pathToFileUrl = (path) => {
   const statcFolder = "public";
   return url.substring(url.indexOf(statcFolder) + statcFolder.length);
 };
+const baseUrl = (req, port = process.env.PORT) => {
+  if (!req) return;
+  var regexpUrl =
+    /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+  port = !isNaN(port) ? Number(port) : null;
+  const url = `${req.protocol}://${req.hostname}${port ? ":" + port : ""}`;
+  return url.match(regexpUrl) ? url : null;
+};
+const fullStaticUrl = (baseUrl, relativeUrl) => {
+  if (typeof baseUrl !== "string" && typeof relativeUrl !== "string") return;
+  return new URL(relativeUrl.trim(), baseUrl.trim()).href;
+};
 module.exports = {
   hashString,
   equalStringToHash,
@@ -84,4 +96,6 @@ module.exports = {
   checkField,
   deleteAddationalField,
   pathToFileUrl,
+  baseUrl,
+  fullStaticUrl,
 };

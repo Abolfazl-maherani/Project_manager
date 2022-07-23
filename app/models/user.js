@@ -1,4 +1,5 @@
 const { Schema, model, Types } = require("mongoose");
+
 const schemaUser = new Schema(
   {
     first_name: { type: String },
@@ -10,7 +11,7 @@ const schemaUser = new Schema(
     email: { type: String, require: true, unique: true },
     skills: { type: [String], default: [] },
     team: { type: [Types.ObjectId], default: [] },
-    profile_image: { type: String },
+    profile_image: { type: String, default: "/default/default-user-image.png" },
   },
   {
     timestamps: true,

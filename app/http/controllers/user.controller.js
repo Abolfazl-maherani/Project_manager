@@ -4,13 +4,20 @@ const {
   hashString,
   deleteAddationalField,
   pathToFileUrl,
+  baseUrl,
+  fullStaticUrl,
 } = require("../../modules/function");
 
 class UserController {
   async getProfile(req, res, next) {
     try {
       if (!("user" in req)) return;
-      res.json({
+      if (req.user?.profile_image)
+        req.user.profile_image = fullStaticUrl(
+          baseUrl(req),
+          req.user.profile_image
+        );
+      return res.json({
         success: true,
         status: 200,
         user: req.user,

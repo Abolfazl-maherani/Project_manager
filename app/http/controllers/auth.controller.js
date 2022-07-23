@@ -4,6 +4,8 @@ const {
   equalStringToHash,
   generateToken,
   validateTokne,
+  fullStaticUrl,
+  baseUrl,
 } = require("../../modules/function");
 class AuthController {
   async register(req, res, next) {
@@ -16,7 +18,24 @@ class AuthController {
         password: hash_password,
         mobile,
       });
-      res.send(result);
+      if (!result)
+        throw {
+          success: false,
+          status: 500,
+          message: "ثبت نام با خطا مواجه شده است",
+        };
+
+      if ("profile_image" in result) {
+        result.profile_image = fullStaticUrl(
+          baseUrl(req),
+          result.profile_image
+        );
+      }
+      return res.json({
+        status: 201,
+        success: true,
+        result,
+      });
     } catch (error) {
       next(error);
     }
