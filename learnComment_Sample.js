@@ -67,6 +67,9 @@ const upload = multer({ storage: storage });
 
 //# Note: Multer will not append any file extension for you, your function should return a filename complete with an file extension.
 
+//+ Add static folder to  gitignore
+//# You must add static folder to gitignore
+
 /****↓Helper↓****
 
 Start, Pause, End: -- 
