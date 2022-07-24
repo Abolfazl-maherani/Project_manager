@@ -88,6 +88,13 @@ const fullStaticUrl = (baseUrl, relativeUrl) => {
   if (typeof baseUrl !== "string" && typeof relativeUrl !== "string") return;
   return new URL(relativeUrl.trim(), baseUrl.trim()).href;
 };
+const getUploadUrlToDb = (req) => {
+  if (!req) return;
+  if (!"file" in req || !"files" in req) return;
+  const { file, files } = req;
+  const uploadPath = file ? file : files;
+  return pathToFileUrl(uploadPath.path);
+};
 module.exports = {
   hashString,
   equalStringToHash,
@@ -98,4 +105,5 @@ module.exports = {
   pathToFileUrl,
   baseUrl,
   fullStaticUrl,
+  getUploadUrlToDb,
 };

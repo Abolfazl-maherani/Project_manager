@@ -72,8 +72,23 @@ const upload = multer({ storage: storage });
 
 /****↓Helper↓****
 
+//+ Send array in postman
+//# use duplicate key automatic send array
+
+//+ Send array with html form
+<form method="post">
+<input name="favorites[]" type="text"/>
+<input name="favorites[]" type="text"/>
+<input type="submit" value="Go"/>0
+
+
+</form>
+
+//# Search for rebase in git
+
+//End 108
 Start, Pause, End: -- 
-Tipa: #
+Tip: #
 Refrense: ^
 Titles: @
 StepLearn: +

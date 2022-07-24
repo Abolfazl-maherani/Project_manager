@@ -6,6 +6,7 @@ const {
   pathToFileUrl,
   baseUrl,
   fullStaticUrl,
+  getUploadUrlToDb,
 } = require("../../modules/function");
 
 class UserController {
@@ -40,10 +41,7 @@ class UserController {
       if (!checkField(inputKey, ...canEdit))
         req.body = deleteAddationalField(req.body, ...canEdit);
 
-      const { file, files } = req;
-      const uploadPath = file ? file : files;
-
-      req.body["profile_image"] = pathToFileUrl(uploadPath.path);
+      req.body["profile_image"] = getUploadUrlToDb(req);
       const { username } = req.user;
 
       if ("password" in req.body) {
