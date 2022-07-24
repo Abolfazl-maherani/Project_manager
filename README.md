@@ -1,5 +1,5 @@
 # Project_manager
-**restful Api with (express, mongoose)**
+**restful Api with (express, mongodb)**
 
 
 **requirement:**
