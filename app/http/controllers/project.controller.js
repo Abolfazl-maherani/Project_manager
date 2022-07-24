@@ -2,9 +2,7 @@ const { projectModel } = require("../../models/project");
 const { getUploadUrlToDb } = require("../../modules/function");
 class ProjectController {
   async create(req, res, next) {
-    // FIX: Check team field if exist in req.user object can save to db
     try {
-      console.log("body");
       const { _id: owner, team } = req.user;
       const { body } = req;
       if (!body)
@@ -13,6 +11,7 @@ class ProjectController {
           code: 404,
           success: false,
         };
+
       req.body["image"] = getUploadUrlToDb(req);
       const result = await projectModel.create({
         ...body,

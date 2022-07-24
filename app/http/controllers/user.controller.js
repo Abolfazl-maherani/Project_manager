@@ -49,7 +49,7 @@ class UserController {
         req.body.password = hash_password;
       }
 
-      //TODO: We should change this method i will update and return data updated
+      //FIX: We should change this method i will update and return data updated
       const { acknowledged, modifiedCount } = await userModel.updateOne(
         { username },
         { $set: req.body }
