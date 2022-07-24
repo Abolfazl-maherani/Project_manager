@@ -1,9 +1,13 @@
 const { projectModel } = require("../../models/project");
-const { getUploadUrlToDb } = require("../../modules/function");
+const {
+  getUploadUrlToDb,
+  fullStaticUrl,
+  baseUrl,
+} = require("../../modules/function");
 class ProjectController {
   async create(req, res, next) {
     try {
-      const { _id: owner, team } = req.user;
+      const { _id: owner } = req.user;
       const { body } = req;
       if (!body)
         throw {
@@ -13,6 +17,7 @@ class ProjectController {
         };
 
       req.body["image"] = getUploadUrlToDb(req);
+      console.log(req.body);
       const result = await projectModel.create({
         ...body,
         owner,
@@ -30,8 +35,49 @@ class ProjectController {
       next(error);
     }
   }
-  getAll() {}
-  getById() {}
+  async getAll(req, res, next) {
+    try {
+      const { _id: owner } = req.user;
+      const result = await projectModel.find({ owner });
+      if (!result)
+        throw {
+          message: "خطای ناشناخته پروژه ای پیدا نشد",
+        };
+
+      if ("image" in result) {
+        result.image = fullStaticUrl(baseUrl(req), result.image);
+      }
+      return res.json({
+        status: 200,
+        success: true,
+        result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async getById(req, res, next) {
+    try {
+      const { _id: owner } = req.user;
+      const { id: _id } = req.params;
+      console.log({ _id, owner });
+      const result = await projectModel.findOne({ _id, owner });
+      if (!result)
+        throw { message: "پروژه ای با آی دی وارد شده یافت نشد", status: 404 };
+      if ("image" in result) {
+        //TODO: Conver if statment to a function and chage all use
+        result.image = fullStaticUrl(baseUrl(req), result.image);
+      }
+      return res.json({
+        success: true,
+        message: "عملیات موفق آمیز بود",
+        status: 200,
+        result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
   getAllOfTeam() {}
   getOfUser() {}
   update() {}

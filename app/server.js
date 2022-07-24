@@ -45,11 +45,14 @@ class Application {
     this.#app.use((err, req, res, next) => {
       const { translateMulter } = require("./http/middlewares/uploadFile");
       translateMulter(err);
+      console.log(err);
       const status = err?.status || 500;
       const message = err?.message || "خطای سرور";
+      const success = err?.success || false;
+      const { stack } = err;
       return res.status(status).json({
         status,
-        success: false,
+        success,
         message,
       });
     });

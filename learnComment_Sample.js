@@ -85,7 +85,14 @@ const upload = multer({ storage: storage });
 </form>
 
 //# Search for rebase in git
+//+ __v in mongoose
+//# is a version key create with mongoose 
+//# The versionKey is a property set on each document when first created by Mongoose. This keys value contains the internal revision of the document. The name of this document property is configurable.
+//^ https://stackoverflow.com/questions/17810637/mongoose-versioning-when-is-it-safe-to-disable-it#:~:text=The%20versionKey%20is%20a%20property,this%20document%20property%20is%20configurable.
 
+//+ 
+//# Read this article for status code in rest Api
+//^ https://restfulapi.net/http-status-codes/
 //End 108
 Start, Pause, End: -- 
 Tip: #

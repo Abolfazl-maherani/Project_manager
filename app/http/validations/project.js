@@ -1,24 +1,38 @@
-const { body } = require("express-validator");
-
-const projectValidator = () => [
+const { isValidObjectId } = require("mongoose");
+const { body, param } = require("express-validator");
+const createProjectValidator = () => [
   body("title")
     .notEmpty()
     .withMessage("عنوان پروژه نمیتواند خالی باشد")
     .bail()
     .isLength({ min: 5 })
     .withMessage("حداقل طول عنوان باید 5 کاراکتر باشد"),
+  //FIX team (team is Oject id type not a Array String)
   body("team")
     .if((val, { req }) => "team" in req.body)
     .isArray()
     .withMessage("ورودی تیم باید به صورت آرایه باشد")
     .bail()
     .custom((input, { req }) => {
-      const { team } = req.user;
+      const commonErrorMessage = { message: "تیم انتخابی معتبر نیست" };
+      const { team: teamId } = req.user;
+      if (!teamId.length) throw commonErrorMessage;
+      const StringsId = teamId.map((objId) => objId.toString());
       input.forEach((el) => {
-        if (!team.includes(el)) {
-          throw { message: "تیم انتخابی درست نمیباشد" };
-        }
+        if (!StringsId.includes(el)) throw commonErrorMessage;
       });
+      return true;
     }),
+  body("private")
+    .if((val, { req }) => "private" in req.body)
+    .isBoolean()
+    .withMessage("ورودی فیلد پرایویت درست نمیباشد")
+    .toBoolean(),
 ];
-module.exports = projectValidator;
+const getByIdProjectValidator = () => [
+  param("id").custom((input) => {
+    if (!isValidObjectId(input)) throw " آی دی وارد شده صحیح نمیباشد";
+    return true;
+  }),
+];
+module.exports = { createProjectValidator, getByIdProjectValidator };
