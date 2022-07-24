@@ -17,7 +17,6 @@ class ProjectController {
         };
 
       req.body["image"] = getUploadUrlToDb(req);
-      console.log(req.body);
       const result = await projectModel.create({
         ...body,
         owner,
@@ -60,7 +59,6 @@ class ProjectController {
     try {
       const { _id: owner } = req.user;
       const { id: _id } = req.params;
-      console.log({ _id, owner });
       const result = await projectModel.findOne({ _id, owner });
       if (!result)
         throw { message: "پروژه ای با آی دی وارد شده یافت نشد", status: 404 };
@@ -81,6 +79,22 @@ class ProjectController {
   getAllOfTeam() {}
   getOfUser() {}
   update() {}
-  remove() {}
+
+  async remove(req, res, next) {
+    try {
+      const { _id: owner } = req.user;
+      const { id: _id } = req.params;
+      const { deletedCount } = await projectModel.deleteOne({ _id, owner });
+      if (!deletedCount)
+        throw { status: 404, message: " پروژه برای حذف پیدا نشد" };
+      return res.json({
+        success: true,
+        message: "پروژه با موفقیت حذف شد",
+        status: 200,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 module.exports = new ProjectController();

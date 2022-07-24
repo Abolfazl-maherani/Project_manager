@@ -90,8 +90,7 @@ const fullStaticUrl = (baseUrl, relativeUrl) => {
 };
 const getUploadUrlToDb = (req) => {
   if (!req) return;
-  if (!("file" in req || "files" in req)) return "ijsdkfl";
-  console.log("mamad");
+  if (!req.hasOwnProperty("file") || !req.hasOwnProperty("files")) return;
   const { file, files } = req;
   const uploadPath = file ? file : files;
   return pathToFileUrl(uploadPath.path);

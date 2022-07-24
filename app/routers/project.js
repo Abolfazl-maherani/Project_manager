@@ -1,4 +1,3 @@
-const checkLogged = require("../http/middlewares/checkLogged");
 const projectController = require("../http/controllers/project.controller");
 const {
   createProjectValidator,
@@ -7,10 +6,9 @@ const {
 const { upload } = require("../http/middlewares/uploadFile");
 const checkValidation = require("../http/middlewares/checkValidation");
 const router = require("express").Router();
-router.get("/", checkLogged, projectController.getAll);
+router.get("/", projectController.getAll);
 router.post(
   "/create",
-  checkLogged,
   upload.single("image"),
   createProjectValidator(),
   checkValidation,
@@ -18,9 +16,14 @@ router.post(
 );
 router.get(
   "/:id",
-  checkLogged,
   getByIdProjectValidator(),
   checkValidation,
   projectController.getById
+);
+router.delete(
+  "/:id",
+  getByIdProjectValidator(),
+  checkValidation,
+  projectController.remove
 );
 module.exports = router;

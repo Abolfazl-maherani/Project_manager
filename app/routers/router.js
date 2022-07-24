@@ -4,11 +4,12 @@ const authRouter = require("./auth");
 const projectRouter = require("./project");
 const userRouter = require("./user");
 const teamRouter = require("./team");
+const checkLogged = require("../http/middlewares/checkLogged");
 
 // Config routes
 router.use("/auth", authRouter);
-router.use("/user", userRouter);
-router.use("/project", projectRouter);
+router.use("/user", checkLogged, userRouter);
+router.use("/project", checkLogged, projectRouter);
 router.use("/team", teamRouter);
 
 module.exports = router;

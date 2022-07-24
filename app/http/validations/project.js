@@ -7,7 +7,6 @@ const createProjectValidator = () => [
     .bail()
     .isLength({ min: 5 })
     .withMessage("حداقل طول عنوان باید 5 کاراکتر باشد"),
-  //FIX team (team is Oject id type not a Array String)
   body("team")
     .if((val, { req }) => "team" in req.body)
     .isArray()
@@ -28,6 +27,10 @@ const createProjectValidator = () => [
     .isBoolean()
     .withMessage("ورودی فیلد پرایویت درست نمیباشد")
     .toBoolean(),
+  body("tags")
+    .if((val, { req }) => "tags" in req.body)
+    .isArray()
+    .withMessage("ورودی تگ ها باید به صورت آرایه باشد"),
 ];
 const getByIdProjectValidator = () => [
   param("id").custom((input) => {

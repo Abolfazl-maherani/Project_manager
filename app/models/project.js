@@ -7,6 +7,7 @@ const schemaProject = new Schema(
     owner: { type: Types.ObjectId, required: true },
     team: { type: Types.ObjectId },
     private: { type: Boolean, default: true },
+    tags: { type: [String], default: [] },
   },
   {
     timestamps: true,
