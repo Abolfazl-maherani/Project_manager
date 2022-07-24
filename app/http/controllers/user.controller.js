@@ -3,7 +3,6 @@ const {
   checkField,
   hashString,
   deleteAddationalField,
-  pathToFileUrl,
   baseUrl,
   fullStaticUrl,
   getUploadUrlToDb,

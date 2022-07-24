@@ -2,6 +2,7 @@ const { projectModel } = require("../../models/project");
 const { getUploadUrlToDb } = require("../../modules/function");
 class ProjectController {
   async create(req, res, next) {
+    // TODO: Check team field if exist in req.user object can save to db
     try {
       console.log("body");
       const { _id: owner, team } = req.user;
