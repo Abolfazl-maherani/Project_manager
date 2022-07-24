@@ -26,6 +26,7 @@ class Application {
     const path = require("path");
     this.#app.use(this.#express.json());
     this.#app.use(this.#express.urlencoded({ extended: true }));
+
     this.#app.use(
       this.#express.static(
         path.join(path.dirname(require.main.filename), "public")
@@ -40,8 +41,10 @@ class Application {
         message: "صفحه مورد نظر یافت نشد.",
       });
     });
+
     this.#app.use((err, req, res, next) => {
-      console.log("وارد ارور هندلینگ شد");
+      const { translateMulter } = require("./http/middlewares/uploadFile");
+      translateMulter(err);
       const status = err?.status || 500;
       const message = err?.message || "خطای سرور";
       return res.status(status).json({
@@ -53,6 +56,7 @@ class Application {
   }
   configRoute() {
     const allRoute = require("./routers/router");
+
     this.#app.get("/", (req, res, next) => {
       try {
         return res.json({

@@ -1,4 +1,5 @@
 //TODO : Research for can optimization unique check
+
 const { body } = require("express-validator");
 const { userModel } = require("../../models/user");
 
@@ -11,6 +12,7 @@ const USERNAME_REGEXP = {
 //Validation
 const registerValidator = () => [
   body("username")
+    .trim()
     .notEmpty()
     .withMessage("نام کاربری وارد نشده است")
     .bail()
@@ -27,6 +29,8 @@ const registerValidator = () => [
     }),
 
   body("email")
+    .trim()
+    .normalizeEmail({ all_lowercase: true })
     .notEmpty()
     .withMessage("ایمیل وارد نشده است")
     .bail()

@@ -7,7 +7,6 @@ const checkValidation = (req, res, next) => {
     errors.forEach((element) => {
       message[element.param] = element.msg;
     });
-    console.log(message);
     throw {
       status: 400,
       success: false,

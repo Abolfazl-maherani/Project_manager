@@ -12,4 +12,4 @@ const schemaProject = new Schema(
     timestamps: true,
   }
 );
-model.exports.projectModel = model("team", schemaProject);
+module.exports.projectModel = model("project", schemaProject);
