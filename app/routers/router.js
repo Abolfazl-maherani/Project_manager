@@ -10,6 +10,6 @@ const checkLogged = require("../http/middlewares/checkLogged");
 router.use("/auth", authRouter);
 router.use("/user", checkLogged, userRouter);
 router.use("/project", checkLogged, projectRouter);
-router.use("/team", teamRouter);
+router.use("/team", checkLogged, teamRouter);
 
 module.exports = router;

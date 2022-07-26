@@ -93,7 +93,14 @@ const upload = multer({ storage: storage });
 //+ 
 //# Read this article for status code in rest Api
 //^ https://restfulapi.net/http-status-codes/
-//End 108
+
+
+//+
+//# Learn about autoBind()
+
+//+ 
+//# Research is true update upload file in db same time or create split route
+//End 111
 Start, Pause, End: -- 
 Tip: #
 Refrense: ^

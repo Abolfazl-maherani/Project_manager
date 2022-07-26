@@ -10,4 +10,4 @@ const schemaTeam = new Schema(
     timestamps: true,
   }
 );
-model.exports.teamModel = model("team", schemaUser);
+module.exports.teamModel = model("team", schemaTeam);

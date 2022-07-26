@@ -78,7 +78,12 @@ class ProjectController {
   }
   getAllOfTeam() {}
   getOfUser() {}
-  update() {}
+  async update(req, res, next) {
+    try {
+      const canEdit = ["title", "text", "image", "team", "private", "tegs"];
+      req.body["image"] = getUploadUrlToDb(req);
+    } catch (error) {}
+  }
 
   async remove(req, res, next) {
     try {
