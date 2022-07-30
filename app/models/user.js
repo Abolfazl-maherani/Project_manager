@@ -38,6 +38,7 @@ const schemaInvitUser = new Schema(
   },
   { timestamps: true }
 );
+// FIX: We dont create a new collection for invite user must save that to user collection
 const userModel = model("user", schemaUser);
 const inviteModel = model("invit", schemaInvitUser);
 module.exports = {

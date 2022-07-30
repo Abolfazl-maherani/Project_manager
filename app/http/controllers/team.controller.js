@@ -8,6 +8,7 @@ const {
 } = require("../../modules/function");
 class TeamController {
   async sendRequestforInvit(req, res, next) {
+    // FIX: We must change
     const commonResponse = {
       status: 201,
       message: "تیم با موفقیت ایجاد شد",
