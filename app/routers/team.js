@@ -4,5 +4,11 @@ const { createTeamValidator } = require("../http/validations/team");
 
 const router = require("express").Router();
 
-router.post("/", createTeamValidator(), checkValidation, teamController.create);
+router.post(
+  "/",
+  createTeamValidator(),
+  checkValidation,
+  teamController.create,
+  teamController.sendRequestforInvit
+);
 module.exports = router;

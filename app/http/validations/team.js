@@ -1,5 +1,6 @@
 const { isValidObjectId } = require("mongoose");
 const { body, param } = require("express-validator");
+const { userModel } = require("../../models/user");
 const createTeamValidator = () => [
   body("name")
     .exists()
@@ -17,11 +18,26 @@ const createTeamValidator = () => [
     .isArray()
     .withMessage("نوع فیلد یوزر درست نیست")
     .bail()
-    .custom((input, { req }) => {
+    .custom(async (input, { req }) => {
+      const { _id: inviterID } = req.user;
       input.forEach((element) => {
-        if (!isValidObjectId(element)) throw "کاربری یافت نشد";
-        return true;
+        if (!isValidObjectId(element)) throw "کاربری برای دعوت یافت نشد";
+        if (inviterID.toString() === element.toString())
+          throw "شما نمیتوانید خودتان را دعوت به تیم کنید";
       });
+      const usersIsUnique =
+        input.isLength > 0
+          ? input.every((el, index, arr) => arr.includes(el.toString, index))
+          : true;
+      if (!usersIsUnique)
+        throw "نمیتوانید کاربری را همزمان چند مرتبه دعوت کنید";
+
+      const result = await userModel.find({
+        _id: { $in: input },
+      });
+      if (!result) throw "کاربری یافت نشد";
+
+      return true;
     }),
 ];
 module.exports = { createTeamValidator };

@@ -63,7 +63,7 @@ class ProjectController {
       if (!result)
         throw { message: "پروژه ای با آی دی وارد شده یافت نشد", status: 404 };
       if ("image" in result) {
-        //TODO: Conver if statment to a function and chage all use
+        //TODO: Convert if statement to a function and chage all use
         result.image = fullStaticUrl(baseUrl(req), result.image);
       }
       return res.json({

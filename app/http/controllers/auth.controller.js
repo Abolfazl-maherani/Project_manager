@@ -31,6 +31,7 @@ class AuthController {
           result.profile_image
         );
       }
+      result.password = undefined;
       return res.json({
         status: 201,
         success: true,

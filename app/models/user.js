@@ -17,5 +17,30 @@ const schemaUser = new Schema(
     timestamps: true,
   }
 );
+const schemaInvitUser = new Schema(
+  {
+    asigner: {
+      type: Types.ObjectId,
+      required: true,
+    },
+    teamId: {
+      type: Types.ObjectId,
+      required: true,
+    },
+    userId: {
+      type: Types.ObjectId,
+      required: true,
+    },
+    status: {
+      type: String,
+      default: "pending",
+    },
+  },
+  { timestamps: true }
+);
 const userModel = model("user", schemaUser);
-module.exports.userModel = userModel;
+const inviteModel = model("invit", schemaInvitUser);
+module.exports = {
+  userModel,
+  inviteModel,
+};
