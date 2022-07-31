@@ -1,5 +1,5 @@
 const { teamModel } = require("../../models/team");
-const { inviteModel } = require("../../models/user");
+const { userModel } = require("../../models/user");
 
 const {
   getUploadUrlToDb,
@@ -18,15 +18,22 @@ class TeamController {
     const { users } = req.body;
 
     const { _id: teamId } = req.result;
-    const listInvit = [];
-    listInvit.push(
-      ...users.map((userId) => {
-        return { userId, asigner, teamId };
-      })
-    );
-    console.log(listInvit);
+    const successInvite = [];
+    users.forEach(async (userId) => {
+      const invitResult = await userModel.updateOne(
+        { _id: userId },
+        { $push: { invites: [{ asigner, teamId, userId }] } }
+      );
+      if (!invitResult.acknowledged)
+        throw { message: "درخواست برای کاربر ارسال نشد" };
+      successInvite.push(userId);
+    });
+
+    if (!successInvite.lenght === users.lenght)
+      throw { message: "درخواست برای کاربر ارسال نشد" };
+    return res.status(201).json(commonResponse);
     // TODO: Fix if needed this function
-    const invitResult = await inviteModel.create(listInvit);
+
     if (!invitResult) throw "اینوایت نشد";
     res.json(commonResponse);
   }

@@ -46,6 +46,7 @@ class AuthController {
       if ("authorization" in req.headers) {
         const { authorization: token } = req.headers;
         if (validateTokne(token, true))
+          // FIX: If user not exist in db and pas valid jwt token get again this error
           throw {
             message: "شما در سیستم  لاگین هستید و نیاز به لاگین مجدد نیست.",
             status: 302,
