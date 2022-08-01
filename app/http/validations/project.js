@@ -1,5 +1,5 @@
-const { isValidObjectId } = require("mongoose");
 const { body, param } = require("express-validator");
+const { validationObjectId } = require("./public");
 const createProjectValidator = () => [
   body("title")
     .notEmpty()
@@ -32,10 +32,5 @@ const createProjectValidator = () => [
     .isArray()
     .withMessage("ورودی تگ ها باید به صورت آرایه باشد"),
 ];
-const getByIdProjectValidator = () => [
-  param("id").custom((input) => {
-    if (!isValidObjectId(input)) throw " آی دی وارد شده صحیح نمیباشد";
-    return true;
-  }),
-];
+const getByIdProjectValidator = () => [param("id").custom(validationObjectId)];
 module.exports = { createProjectValidator, getByIdProjectValidator };

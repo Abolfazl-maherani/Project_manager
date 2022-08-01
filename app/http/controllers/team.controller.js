@@ -32,16 +32,12 @@ class TeamController {
     if (!successInvite.lenght === users.lenght)
       throw { message: "درخواست برای کاربر ارسال نشد" };
     return res.status(201).json(commonResponse);
-    // TODO: Fix if needed this function
-
-    if (!invitResult) throw "اینوایت نشد";
-    res.json(commonResponse);
   }
 
   async create(req, res, next) {
     const { name, description, users } = req.body;
     const { _id } = req.user;
-
+    console.log(_id);
     const result = await teamModel.create({
       name,
       description,
@@ -62,7 +58,21 @@ class TeamController {
 
     next();
   }
-
+  async getById(req, res, next) {
+    try {
+      const { id: teamId } = req.params;
+      const result = await teamModel.findOne({ __id: teamId });
+      if (!result) throw { message: "تیمی یافت نشد", status: 404 };
+      return res.json({
+        status: 200,
+        success: true,
+        message: "با موفقیت یافت شد",
+        result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
   update() {}
   removeById() {}
   inviteUser() {}

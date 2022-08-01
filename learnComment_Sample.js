@@ -98,6 +98,11 @@ const upload = multer({ storage: storage });
 //+
 //# Learn about autoBind()
 
+//+
+//@ findOne and find 
+//# findOne return one result
+//# find return array from result
+
 //+ 
 //# Research is true update upload file in db same time or create split route
 //End 111

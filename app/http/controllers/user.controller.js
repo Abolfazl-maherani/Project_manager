@@ -71,6 +71,20 @@ class UserController {
   }
   addSkills() {}
   editSkills() {}
+  async getInvites(req, res, next) {
+    const { username } = req.user;
+    const result = await userModel.findOne(
+      { username },
+      { invites: 1, _id: 0 }
+    );
+    console.log(result);
+    if (!result) throw { message: "مشکل ناشناخته" };
+    return res.json({
+      success: true,
+      status: 200,
+      result,
+    });
+  }
   acceptInviteInTeam() {}
   rejectInviteInTeam() {}
 }

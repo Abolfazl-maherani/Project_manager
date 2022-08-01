@@ -1,6 +1,8 @@
 const { isValidObjectId } = require("mongoose");
 const { body, param } = require("express-validator");
 const { userModel } = require("../../models/user");
+const { teamModel } = require("../../models/team");
+const { validationObjectId } = require("./public");
 const createTeamValidator = () => [
   body("name")
     .exists()
@@ -40,4 +42,34 @@ const createTeamValidator = () => [
       return true;
     }),
 ];
-module.exports = { createTeamValidator };
+const getByIdValidator = () => [
+  param("id")
+    .exists()
+    .withMessage("لطفا شناسه تیم را وارد کنید")
+    .bail()
+    .notEmpty()
+    .withMessage("شناسه تیم خالی است")
+    .bail()
+    .trim()
+    .custom(validationObjectId)
+    .bail()
+    .custom(async (input, { req }) => {
+      const msg = "شما دسترسی لازم برای دسترسی به اطلاعات تیم را ندارید";
+      const result = await teamModel.findById(input);
+      if (result) {
+        const { owner } = result;
+        const { _id } = req.user;
+        if (owner.toString() === _id.toString()) return true;
+      }
+      const { invites } = req.user;
+      if (!invites.length) throw msg;
+      const accessToTeam = [];
+      invites.forEach((el) => {
+        const { teamId } = el;
+        accessToTeam.push(teamId.toString());
+      });
+      if (!accessToTeam.includes(input)) throw msg;
+      return true;
+    }),
+];
+module.exports = { createTeamValidator, getByIdValidator };

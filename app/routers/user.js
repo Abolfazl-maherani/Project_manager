@@ -15,5 +15,5 @@ router.put(
 );
 userController.editProfile;
 router.post("/profile-image", upload.single("profile_image"));
-
+router.get("/invites", userController.getInvites);
 module.exports = router;
