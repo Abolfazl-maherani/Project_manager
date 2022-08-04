@@ -1,7 +1,7 @@
-const { body, check } = require("express-validator");
+const { body, check, param } = require("express-validator");
 const { version } = require("mongoose");
 const { userModel } = require("../../models/user");
-
+const { validationObjectId } = require("./public");
 //TODO: Can create function for check is exist field replace to key in req.body
 const userValidator = () => [
   body("email")
@@ -70,5 +70,26 @@ const userValidator = () => [
       return true;
     }),
 ];
+const acceptInvite = () => [
+  param("id")
+    .notEmpty()
+    .withMessage("شناسه کاربر نمیتواند خالی باشد")
+    .bail()
+    .trim()
+    .custom(validationObjectId)
+    .bail()
+    .custom((input, { req }) => {
+      const commonMessage = "شناسه وارد شده با درخواست های شما مطابقت ندارد";
+      const { invites: userInvites } = req.user;
+      if (!userInvites.length) throw commonMessage;
+      const userInvitesId = userInvites.map(({ _id }) => _id.toString());
+      console.log(userInvitesId, "input" + input);
+      if (!userInvitesId.includes(input)) throw commonMessage;
+      return true;
+    }),
+];
 
-module.exports = userValidator;
+module.exports = {
+  userValidator,
+  acceptInvite,
+};

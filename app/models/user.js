@@ -1,25 +1,26 @@
 const { Schema, model, Types } = require("mongoose");
-const schemaInvitUser = new Schema(
-  {
-    asigner: {
-      type: Types.ObjectId,
-      required: true,
-    },
-    teamId: {
-      type: Types.ObjectId,
-      required: true,
-    },
-    userId: {
-      type: Types.ObjectId,
-      required: true,
-    },
-    status: {
-      type: String,
-      default: "pending",
-    },
+const schemaInvitUser = new Schema({
+  asigner: {
+    type: Types.ObjectId,
+    required: true,
   },
-  { timestamps: true }
-);
+  teamId: {
+    type: Types.ObjectId,
+    required: true,
+  },
+  userId: {
+    type: Types.ObjectId,
+    required: true,
+  },
+  status: {
+    type: String,
+    default: "pending",
+  },
+  dataCreated: {
+    type: Date,
+    default: new Date(),
+  },
+});
 const schemaUser = new Schema(
   {
     first_name: { type: String },

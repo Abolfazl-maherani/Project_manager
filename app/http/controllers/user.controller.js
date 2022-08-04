@@ -1,3 +1,4 @@
+const { teamModel } = require("../../models/team");
 const { userModel } = require("../../models/user");
 const {
   checkField,
@@ -85,7 +86,39 @@ class UserController {
       result,
     });
   }
-  acceptInviteInTeam() {}
+  async acceptInviteInTeam(req, res, next) {
+    const updateToStatus = "accept";
+    const { id: inviteId } = req.params;
+    userModel
+      .findOneAndUpdate(
+        { _id: req.user._id, "invites._id": inviteId },
+        {
+          $set: {
+            "invites.$.status": updateToStatus,
+          },
+        },
+        {
+          projection: {
+            invites: 1,
+          },
+        }
+      )
+      .then(async ({ invites }) => {
+        const { teamId } = invites.find(
+          (invite) => invite["_id"].toString() === inviteId
+        );
+        const result = await teamModel.updateOne(
+          { _id: teamId },
+          {
+            $addToSet: {
+              users: req.user._id,
+            },
+          }
+        );
+        console.log(result);
+        res.send("ok");
+      });
+  }
   rejectInviteInTeam() {}
 }
 module.exports = new UserController();

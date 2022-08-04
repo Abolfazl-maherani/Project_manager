@@ -70,42 +70,51 @@ const upload = multer({ storage: storage });
 //+ Add static folder to  gitignore
 //# You must add static folder to gitignore
 
-/****↓Helper↓****
-
 //+ Send array in postman
 //# use duplicate key automatic send array
 
 //+ Send array with html form
 <form method="post">
-<input name="favorites[]" type="text"/>
-<input name="favorites[]" type="text"/>
-<input type="submit" value="Go"/>0
-
-
-</form>
+  <input name="favorites[]" type="text" />
+  <input name="favorites[]" type="text" />
+  <input type="submit" value="Go" />0
+</form>;
 
 //# Search for rebase in git
 //+ __v in mongoose
-//# is a version key create with mongoose 
+//# is a version key create with mongoose
 //# The versionKey is a property set on each document when first created by Mongoose. This keys value contains the internal revision of the document. The name of this document property is configurable.
 //^ https://stackoverflow.com/questions/17810637/mongoose-versioning-when-is-it-safe-to-disable-it#:~:text=The%20versionKey%20is%20a%20property,this%20document%20property%20is%20configurable.
 
-//+ 
+//+
 //# Read this article for status code in rest Api
 //^ https://restfulapi.net/http-status-codes/
-
 
 //+
 //# Learn about autoBind()
 
 //+
-//@ findOne and find 
+//@ findOne and find
 //# findOne return one result
 //# find return array from result
 
-//+ 
+//+
+//@ Update sub document in mongodb
+//^ https://stackoverflow.com/questions/26156687/mongoose-find-update-subdocument
+const result = await userModel.findOneAndUpdate(
+  { _id: req.user._id, "invites._id": inviteId },
+  {
+    $set: {
+      "invites.$.status": updateToStatus,
+    },
+  }
+);
+
+//+
 //# Research is true update upload file in db same time or create split route
 //End 111
+
+/****↓Helper↓****
 Start, Pause, End: -- 
 Tip: #
 Refrense: ^
