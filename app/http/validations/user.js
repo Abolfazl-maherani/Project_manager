@@ -83,7 +83,7 @@ const acceptInvite = () => [
       const { invites: userInvites } = req.user;
       if (!userInvites.length) throw commonMessage;
       const userInvitesId = userInvites.map(({ _id }) => _id.toString());
-      console.log(userInvitesId, "input" + input);
+      console.log(userInvitesId);
       if (!userInvitesId.includes(input)) throw commonMessage;
       return true;
     }),

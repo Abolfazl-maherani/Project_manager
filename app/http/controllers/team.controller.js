@@ -61,7 +61,7 @@ class TeamController {
   async getById(req, res, next) {
     try {
       const { id: teamId } = req.params;
-      const result = await teamModel.findOne({ __id: teamId });
+      const result = await teamModel.findOne({ _id: teamId });
       if (!result) throw { message: "تیمی یافت نشد", status: 404 };
       return res.json({
         status: 200,

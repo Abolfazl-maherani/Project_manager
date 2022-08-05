@@ -73,24 +73,27 @@ class UserController {
   addSkills() {}
   editSkills() {}
   async getInvites(req, res, next) {
-    const { username } = req.user;
-    const result = await userModel.findOne(
-      { username },
-      { invites: 1, _id: 0 }
-    );
-    console.log(result);
-    if (!result) throw { message: "مشکل ناشناخته" };
-    return res.json({
-      success: true,
-      status: 200,
-      result,
-    });
+    try {
+      const { username } = req.user;
+      const result = await userModel.findOne(
+        { username },
+        { invites: 1, _id: 0 }
+      );
+      if (!result) throw { message: "مشکل ناشناخته" };
+      return res.json({
+        success: true,
+        status: 200,
+        result,
+      });
+    } catch (error) {
+      next(error);
+    }
   }
   async acceptInviteInTeam(req, res, next) {
-    const updateToStatus = "accept";
-    const { id: inviteId } = req.params;
-    userModel
-      .findOneAndUpdate(
+    try {
+      const updateToStatus = "accept";
+      const { id: inviteId } = req.params;
+      const invites = await userModel.findOneAndUpdate(
         { _id: req.user._id, "invites._id": inviteId },
         {
           $set: {
@@ -102,23 +105,77 @@ class UserController {
             invites: 1,
           },
         }
-      )
-      .then(async ({ invites }) => {
-        const { teamId } = invites.find(
-          (invite) => invite["_id"].toString() === inviteId
-        );
-        const result = await teamModel.updateOne(
-          { _id: teamId },
-          {
-            $addToSet: {
-              users: req.user._id,
-            },
-          }
-        );
-        console.log(result);
-        res.send("ok");
+      );
+      if (!invites) throw { message: "خطای ناشناخته" };
+      const { teamId, status } = invites;
+
+      if (status !== "pending")
+        throw {
+          message: "شما نمیتوانید یک درخواست را چند مرتبه تعیین وضعیت کنید",
+          status: 400,
+        };
+      const result = await teamModel.updateOne(
+        { _id: teamId },
+        {
+          $addToSet: {
+            users: req.user._id,
+          },
+        }
+      );
+      if (!result.acknowledged && result.modifiedCount !== 1)
+        throw { message: "خطای ناشناخته" };
+      res.json({
+        message: "شما درخواست را قبول کردید",
+        success: true,
+        status: 200,
       });
+    } catch (error) {
+      next(error);
+    }
   }
-  rejectInviteInTeam() {}
+  async rejectInviteInTeam(req, res, next) {
+    try {
+      const updateToStatus = "reject";
+      const { id: inviteId } = req.params;
+      const invites = await userModel.findOneAndUpdate(
+        { _id: req.user._id, "invites._id": inviteId },
+        {
+          $set: {
+            "invites.$.status": updateToStatus,
+          },
+        },
+        {
+          projection: {
+            invites: 1,
+          },
+        }
+      );
+      if (!invites) throw { message: "خطای ناشناخته" };
+      const { teamId, status } = invites;
+
+      if (status !== "pending")
+        throw {
+          message: "شما نمیتوانید یک درخواست را چند مرتبه تعیین وضعیت کنید",
+          status: 400,
+        };
+      const result = await teamModel.updateOne(
+        { _id: teamId },
+        {
+          $pullAll: {
+            users: req.user._id,
+          },
+        }
+      );
+      if (!result.acknowledged && result.modifiedCount !== 1)
+        throw { message: "خطای ناشناخته" };
+      res.json({
+        message: "شما درخواست را رد کردید",
+        success: true,
+        status: 200,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 module.exports = new UserController();

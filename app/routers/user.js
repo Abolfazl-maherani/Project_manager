@@ -22,4 +22,12 @@ router.patch(
   checkValidation,
   userController.acceptInviteInTeam
 );
+
+//TODO: Change name validator the validators are common
+router.patch(
+  "/rejectInvite/:id",
+  acceptInvite(),
+  checkValidation,
+  userController.rejectInviteInTeam
+);
 module.exports = router;
