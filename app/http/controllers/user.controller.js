@@ -91,9 +91,26 @@ class UserController {
   }
   async acceptInviteInTeam(req, res, next) {
     try {
+      const { username } = req.user;
+      const result = await userModel.findOne(
+        { username },
+        { invites: 1, _id: 0 }
+      );
+      if (!result) throw { message: "مشکل ناشناخته" };
+      return res.json({
+        success: true,
+        status: 200,
+        result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async acceptInviteInTeam(req, res, next) {
+    try {
       const updateToStatus = "accept";
       const { id: inviteId } = req.params;
-      const invites = await userModel.findOneAndUpdate(
+      const { invites } = await userModel.findOneAndUpdate(
         { _id: req.user._id, "invites._id": inviteId },
         {
           $set: {
@@ -102,18 +119,15 @@ class UserController {
         },
         {
           projection: {
+            _id: 0,
             invites: 1,
           },
+          new: true,
         }
       );
       if (!invites) throw { message: "خطای ناشناخته" };
-      const { teamId, status } = invites;
-
-      if (status !== "pending")
-        throw {
-          message: "شما نمیتوانید یک درخواست را چند مرتبه تعیین وضعیت کنید",
-          status: 400,
-        };
+      const { teamId } = invites.find(({ _id }) => _id.toString() === inviteId);
+      if (!teamId) throw { message: "خطای ناشناخته" };
       const result = await teamModel.updateOne(
         { _id: teamId },
         {
@@ -151,23 +165,6 @@ class UserController {
         }
       );
       if (!invites) throw { message: "خطای ناشناخته" };
-      const { teamId, status } = invites;
-
-      if (status !== "pending")
-        throw {
-          message: "شما نمیتوانید یک درخواست را چند مرتبه تعیین وضعیت کنید",
-          status: 400,
-        };
-      const result = await teamModel.updateOne(
-        { _id: teamId },
-        {
-          $pullAll: {
-            users: req.user._id,
-          },
-        }
-      );
-      if (!result.acknowledged && result.modifiedCount !== 1)
-        throw { message: "خطای ناشناخته" };
       res.json({
         message: "شما درخواست را رد کردید",
         success: true,

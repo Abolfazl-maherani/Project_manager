@@ -82,9 +82,11 @@ const acceptInvite = () => [
       const commonMessage = "شناسه وارد شده با درخواست های شما مطابقت ندارد";
       const { invites: userInvites } = req.user;
       if (!userInvites.length) throw commonMessage;
-      const userInvitesId = userInvites.map(({ _id }) => _id.toString());
-      console.log(userInvitesId);
-      if (!userInvitesId.includes(input)) throw commonMessage;
+      const invite = userInvites.find(({ _id }) => _id.toString() === input);
+      if (!invite) throw commonMessage;
+      if (invite.status !== "pending")
+        throw "شما نمیتوانید یک درخواست را چند مرتبه تعیین وضعیت کنید";
+
       return true;
     }),
 ];
