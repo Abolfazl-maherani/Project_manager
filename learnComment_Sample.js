@@ -112,6 +112,10 @@ const result = await userModel.findOneAndUpdate(
 
 //+
 //# Research is true update upload file in db same time or create split route
+
+//+
+//@ Refrence db
+//# When use refrence id in a document from other db we can use loockup for get together simillar join in sql
 //End 111
 
 /****↓Helper↓****

@@ -3,6 +3,7 @@ const checkValidation = require("../http/middlewares/checkValidation");
 const {
   createTeamValidator,
   getByIdValidator,
+  removeByIdValidator,
 } = require("../http/validations/team");
 
 const router = require("express").Router();
@@ -14,6 +15,16 @@ router.post(
   teamController.create,
   teamController.sendRequestforInvit
 );
-
-router.get("/:id", getByIdValidator(), checkValidation, teamController.getById);
+router.get(
+  "/:id",
+  removeByIdValidator(),
+  checkValidation,
+  teamController.getById
+);
+router.delete(
+  "/:id",
+  getByIdValidator(),
+  checkValidation,
+  teamController.removeById
+);
 module.exports = router;

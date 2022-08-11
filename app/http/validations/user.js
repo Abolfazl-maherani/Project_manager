@@ -1,4 +1,4 @@
-const { body, check, param } = require("express-validator");
+const { body, check, param, query } = require("express-validator");
 const { version } = require("mongoose");
 const { userModel } = require("../../models/user");
 const { validationObjectId } = require("./public");
@@ -90,8 +90,16 @@ const acceptInvite = () => [
       return true;
     }),
 ];
-
+const getInvitesValidation = () => [
+  query("filter")
+    .optional()
+    .isString()
+    .trim()
+    .isIn(["accept", "reject", "pending"])
+    .withMessage("فیلتر شما صحیح نمیباشد"),
+];
 module.exports = {
   userValidator,
   acceptInvite,
+  getInvitesValidation,
 };

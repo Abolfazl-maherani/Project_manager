@@ -54,7 +54,7 @@ const getByIdValidator = () => [
     .custom(validationObjectId)
     .bail()
     .custom(async (input, { req }) => {
-      const msg = "شما دسترسی لازم برای دسترسی به اطلاعات تیم را ندارید";
+      const msg = "شما دسترسی لازم  به اطلاعات تیم را ندارید";
       const result = await teamModel.findById(input);
       if (result) {
         const { owner } = result;
@@ -72,4 +72,26 @@ const getByIdValidator = () => [
       return true;
     }),
 ];
-module.exports = { createTeamValidator, getByIdValidator };
+const removeByIdValidator = () => [
+  param("id")
+    .exists()
+    .withMessage("لطفا شناسه تیم را وارد کنید")
+    .bail()
+    .notEmpty()
+    .withMessage("شناسه تیم خالی است")
+    .bail()
+    .trim()
+    .custom(validationObjectId)
+    .bail()
+    .custom(async (input, { req }) => {
+      const msg = "شما دسترسی لازم  به اطلاعات تیم را ندارید";
+      const result = await teamModel.findById(input);
+      if (result) {
+        const { owner } = result;
+        const { _id } = req.user;
+        if (owner.toString() !== _id.toString()) throw msg;
+        return true;
+      }
+    }),
+];
+module.exports = { createTeamValidator, getByIdValidator, removeByIdValidator };

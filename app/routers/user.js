@@ -2,8 +2,13 @@ const checkValidation = require("../http/middlewares/checkValidation");
 
 const router = require("express").Router();
 const userController = require("../http/controllers/user.controller");
-const { userValidator, acceptInvite } = require("../http/validations/user");
+const {
+  userValidator,
+  acceptInvite,
+  getInvitesValidation,
+} = require("../http/validations/user");
 const { upload } = require("../http/middlewares/uploadFile");
+const { getInvites } = require("../http/controllers/user.controller");
 
 router.get("/profile", userController.getProfile);
 router.put(
@@ -15,7 +20,12 @@ router.put(
 );
 userController.editProfile;
 router.post("/profile-image", upload.single("profile_image"));
-router.get("/invites", userController.getInvites);
+router.get(
+  "/invites",
+  getInvitesValidation(),
+  checkValidation,
+  userController.getInvites
+);
 router.patch(
   "/acceptInvite/:id",
   acceptInvite(),

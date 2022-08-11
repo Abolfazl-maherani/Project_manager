@@ -74,12 +74,103 @@ class UserController {
   editSkills() {}
   async getInvites(req, res, next) {
     try {
-      const { username } = req.user;
-      const result = await userModel.findOne(
-        { username },
-        { invites: 1, _id: 0 }
+      const { _id: userId } = req.user;
+      const { filter = /[a-zA-Z]/ } = req.query; //accept - reject - pending
+      console.log(filter);
+      const result = await userModel.aggregate(
+        [
+          {
+            $match: {
+              "invites.status": filter,
+              _id: userId,
+            },
+          },
+          {
+            $project: {
+              _id: 0.0,
+              invites: {
+                $filter: {
+                  input: "$invites",
+                  as: "invite",
+                  cond: {
+                    $or: [
+                      { $eq: ["$$invite.status", filter] },
+                      {
+                        $regexMatch: {
+                          input: "$$invite.status",
+                          regex: filter,
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            },
+          },
+          {
+            $unwind: {
+              path: "$invites",
+            },
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "invites.asigner",
+              foreignField: "_id",
+              as: "invites.asigner",
+              pipeline: [
+                {
+                  $project: {
+                    _id: 1.0,
+                    username: 1.0,
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $lookup: {
+              from: "teams",
+              localField: "invites.teamId",
+              foreignField: "_id",
+              as: "invites.team",
+              pipeline: [
+                {
+                  $project: {
+                    name: 1.0,
+                    description: 1.0,
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $unwind: {
+              path: "$invites.asigner",
+            },
+          },
+          {
+            $unwind: {
+              path: "$invites.team",
+            },
+          },
+          {
+            $project: {
+              "invites.teamId": 0.0,
+            },
+          },
+          {
+            $replaceRoot: {
+              newRoot: "$invites",
+            },
+          },
+        ],
+        {
+          allowDiskUse: false,
+        }
       );
       if (!result) throw { message: "مشکل ناشناخته" };
+      console.log(result);
       return res.json({
         success: true,
         status: 200,
